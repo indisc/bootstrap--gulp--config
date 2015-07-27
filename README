@@ -8,11 +8,11 @@ git clone https://github.com/indisc/bootstrap--gulp--config
 **Navigate to "code" Folder**
 
 TYPE
-``
+```
 npm init
-``
+```
 and
-``
+```
 npm install
-``
+```
 **THE INSTALL IS COMPLETE**
