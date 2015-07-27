@@ -1,18 +1,18 @@
 
-# **Install** (from Terminal)
+Install (from Terminal)
 
-**Clone the Repository**
-```
+Clone the Repository
+
 git clone https://github.com/indisc/bootstrap--gulp--config
-```
-**Navigate to "code" Folder**
+
+Navigate to "code" Folder
 
 TYPE
-```
+
 npm init
-```
+
 and
-```
+
 npm install
-```
+
 THE INSTALL IS COMPLETE
