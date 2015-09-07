@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var less = require('gulp-less');
-var livereload = require('gulp-livereload');
+var browserSync = require('browser-sync').create();
 var connect = require('gulp-connect');
 var minifyCss = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
@@ -10,12 +10,13 @@ var sourcemaps = require('gulp-sourcemaps');
 
 
 
-//gulp webserver
-gulp.task('webserver', function(){
-	connect.server({
-		root: '../code/',
-		livereload: true
+//browserSync
+gulp.task('webserver', ['less'], function(){
+	browserSync.init({
+		server: '../code/'
 	});
+	gulp.watch('*.html').on('change', browserSync.reload);
+	gulp.watch('bootstrap/build--less/*.less', ['less']);
 });
 
 //gulp less
@@ -26,7 +27,7 @@ gulp.task('less', function(){
 		.pipe(less())
 		.pipe(autoprefixer('last 10 versions', 'ie 9'))
 		.pipe(gulp.dest('bootstrap/public/css/'))
-		.pipe(connect.reload());
+		.pipe(browserSync.stream());
 });
 
 gulp.task('sourcemap', function(){
@@ -47,16 +48,6 @@ gulp.task('prefix', function(){
 		.pipe(gulp.dest('build'))
 });
 
-//livereload
-gulp.task('css', function(){
-	gulp.src('bootstrap/public/css/*.css')
-		.pipe(connect.reload());
-});
-
-gulp.task('html', function(){
-	gulp.src('*.html')
-		.pipe(connect.reload());
-});
 
 //css minify
 gulp.task('minify-css', function(){
@@ -78,7 +69,6 @@ gulp.task('images', function(cb) {
 gulp.task('watch', function(){
 	gulp.watch('bootstrap/build--less/*.less', ['less']);
 	gulp.watch(['*.html'], ['html']);
-	gulp.watch(['bootstrap/public/css/*.css'], ['css']);
 	gulp.watch('bootstrap/public/cssmin/*.css', ['minify-css']);
 	gulp.watch('bootstrap/public/css/main.css', ['prefix']);
 });
