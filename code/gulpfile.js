@@ -1,25 +1,26 @@
 var gulp = require('gulp');
 var less = require('gulp-less');
-var livereload = require('gulp-livereload');
+var browserSync = require('browser-sync').create();
 var connect = require('gulp-connect');
 var minifyCss = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
-var imageop = require('gulp-image-optimization');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
 var sourcemaps = require('gulp-sourcemaps');
 var gutil    = require('gulp-util');
 var uglify  = require('gulp-uglify');
 var concat  = require('gulp-concat');
 var jshint = require('gulp-jshint');
 
-//gulp webserver
-gulp.task('webserver', function(){
-	connect.server({
-		root: '../code/',
-		livereload: true
+// static webserver
+gulp.task('webserver', ['less'], function(){
+	browserSync.init({
+		server: "../code/"
 	});
+	gulp.watch('bootstrap/build--less', ['less']);
+	gulp.watch('*.html').on('change', browserSync.reload);
 });
 
-//gulp less 
 
 //gulp less
 gulp.task('less', function(){
@@ -83,13 +84,17 @@ gulp.task('minify-css', function(){
 		.pipe(gulp.dest('bootstrap/public/cssmin'));
 });
 
-gulp.task('images', function(cb) {
-    gulp.src('bootstrap/public/img/**/*.+(png|jpg|gif|jpeg)').pipe(imageop({
-        optimizationLevel: 5,
-        progressive: true,
-        interlaced: true
-    })).pipe(gulp.dest('bootstrap/public/img--min/')).on('end', cb).on('error', cb);
+
+gulp.task('images', function(){
+	return gulp.src('bootstrap/public/img')
+		.pipe(imagemin({
+			progressive: true,
+			svgoPlugins: [{removeViewBox: false}],
+			use: [pngquant()]
+		}))
+		.pipe(gulp.dest('bootstrap/public/img--min'));
 });
+
 
 
 
