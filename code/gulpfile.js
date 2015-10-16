@@ -4,7 +4,7 @@ var browserSync = require('browser-sync').create();
 var connect = require('gulp-connect');
 var minifyCss = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
-var image = require('gulp-image');
+var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var sourcemaps = require('gulp-sourcemaps');
 var gutil    = require('gulp-util');
@@ -86,17 +86,11 @@ gulp.task('minify-css', function(){
 
 
 gulp.task('images', function(){
-	return gulp.src('bootstrap/public/img/*')
-		.pipe(image({
-			pngquant: true,
-      		optipng: false,
-      		zopflipng: true,
-      		advpng: true,
-      		jpegRecompress: false,
-      		jpegoptim: true,
-      		mozjpeg: true,
-      		gifsicle: true,
-      		svgo: true
+	return gulp.src('bootstrap/public/img')
+		.pipe(imagemin({
+			progressive: true,
+			svgoPlugins: [{removeViewBox: false}],
+			use: [pngquant()]
 		}))
 		.pipe(gulp.dest('bootstrap/public/img--min'));
 });
